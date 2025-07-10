@@ -10,7 +10,7 @@
             android:value="true" />
         <meta-data
             android:name="xposeddescription"
-            android:value="Removes ads from Mi Wallpaper Carousel" />
+            android:resource="@string/app_desc" />
         <meta-data
             android:name="xposedminversion"
             android:value="82" />

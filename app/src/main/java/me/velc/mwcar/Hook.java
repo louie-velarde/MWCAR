@@ -20,19 +20,18 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 public class Hook implements IXposedHookLoadPackage {
 
 	private static final String APP_PACKAGE_NAME = "com.mfashiongallery.emag";
-	private static final String NET_PACKAGE_NAME = APP_PACKAGE_NAME + ".network";
 
 	@Override
 	public void handleLoadPackage(LoadPackageParam lpparam) {
 		if (APP_PACKAGE_NAME.equals(lpparam.packageName)) {
-			interceptResponse(".GsonRequest", lpparam.classLoader);
-			interceptResponse(".VolleyGsonRequest", lpparam.classLoader);
+			interceptResponse(".network.GsonRequest", lpparam.classLoader);
+			interceptResponse(".network.VolleyGsonRequest", lpparam.classLoader);
 		}
 	}
 
 	static void interceptResponse(String className, ClassLoader classLoader) {
 		XposedHelpers.findAndHookMethod(
-				NET_PACKAGE_NAME + className,
+				APP_PACKAGE_NAME + className,
 				classLoader,
 				"parseNetworkResponse",
 				"com.android.volley.NetworkResponse",
@@ -41,7 +40,8 @@ public class Hook implements IXposedHookLoadPackage {
 					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 						removeAds(param);
 					}
-				});
+				}
+		);
 	}
 
 	static void removeAds(MethodHookParam param) throws UnsupportedEncodingException {
